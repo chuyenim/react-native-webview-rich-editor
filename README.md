@@ -71,7 +71,7 @@ export default function HomeScreen() {
         <ScrollView>
             <View style={{ padding: 16 }}>
                 <View style={{ marginBottom: 20, padding: 10, backgroundColor: '#eee', minHeight: 20 }}>
-                    <RichEditor ref={editorRef} content={plainHtml} onChange={setPlainHtml} bgColor={'#eee'} />
+                    <RichEditor ref={editorRef} value={plainHtml} onChange={setPlainHtml} bgColor={'#eee'} />
                 </View>
 
                 <Button onPress={handleFocus} title="Focus" />
