@@ -2,29 +2,28 @@ import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useStat
 import { Platform, View } from "react-native";
 import { WebView } from 'react-native-webview';
 
-const htmlContentTempl = `
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  body {
-      margin: 0;
-      padding: 0;
-  }
-  #editor {
-    border: 0px solid #ccc;
-    cursor: text;
-    padding: 2px;
-    outline: none;
-    min-height: 20px;
-    box-sizing: border-box;
-    
-  }
-  #editor p {
-    margin: 0;
-    padding: 0;
-  }
-  #editor .mention {
-    color: blue;
-  }
+const htmlContentTempl = `<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    #editor {
+        border: 0px solid #ccc;
+        cursor: text;
+        padding: 2px;
+        outline: none;
+        min-height: 20px;
+        box-sizing: border-box;
+    }
+    p {
+        margin: 0;
+        padding: 0;
+    }
+    .mention {
+        color: blue;
+    }
     div[contenteditable="true"]:empty:before {
         content: attr(placeholder);
         color: #555;
@@ -34,9 +33,12 @@ const htmlContentTempl = `
     div[contenteditable="true"]:empty:focus:before {
         content: "";
     }
-}
-</style>
-<div id="editor" contenteditable="true" placeholder="Type something...">{{content}}</div>
+    </style>
+</head>
+
+<body>
+    <div id="editor" contenteditable="true" placeholder="Type something...">{{content}}</div>
+</body>
 
 <script type="text/javascript">
 const editor = document.getElementById('editor');
@@ -47,6 +49,12 @@ function focustEditor() {
 
 function blurtEditor() {
     editor.blur();
+}
+
+function injectCss(css) {
+    const style = document.createElement('style');
+    style.innerHTML = css;
+    document.head.appendChild(style);
 }
 
 function setHtml(html) {
@@ -186,6 +194,7 @@ export interface RichEditorRef {
     surroundSelectionTag: (tagName: string) => void;
     toggleSelectionTag: (tagName: string) => void;
     setPlaceholder: (placeholder: string) => void;
+    injectCss: (css: string) => void;
 }
   
 interface RichEditorProps {
@@ -193,7 +202,8 @@ interface RichEditorProps {
   onChange?: (value: string) => void;
   placeholder?: string | undefined;
   customStyles?: any;
-  bgColor?: any;
+  bgColor?: string;
+  injectedCss?: string;
 }
 
 const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
@@ -217,6 +227,7 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
         surroundSelectionTag: (tagName) => surroundSelectionTag(tagName),
         toggleSelectionTag: (tagName) => toggleSelectionTag(tagName),
         setPlaceholder: (placeholder) => setPlaceholder(placeholder),
+        injectCss: (css) => injectCss(css),
     }));
 
     const handleMessage = useCallback(event => {
@@ -261,17 +272,31 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
     }, [props.placeholder, loadingEnd]);
 
     useEffect(() => {
+        if (props.injectedCss && loadingEnd) {
+            injectCss(props.injectedCss);
+        }
+    }, [props.injectedCss, loadingEnd]);
+
+    useEffect(() => {
         if (props.onChange && content !== props.value) {
             props.onChange(content)
         }
     }, [content]);
 
+    const injectCss = (css: string) => {
+        webViewref.current?.injectJavaScript(`window.injectCss('${css}');`);
+    }
+
+    const setPlaceholder = (placeholder: string) => {
+        webViewref.current?.injectJavaScript(`window.setPlaceholder('${placeholder}');`);
+    }
+
     const focusEditor = () => {
-        webViewref.current?.injectJavaScript('focustEditor();');
+        webViewref.current?.injectJavaScript('window.focustEditor();');
     }
 
     const blurEditor = () => {
-        webViewref.current?.injectJavaScript('blurtEditor();');
+        webViewref.current?.injectJavaScript('bwindow.lurtEditor();');
     }
 
     const setValue = (html: string | null) => {
@@ -292,10 +317,6 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
 
     const toggleSelectionTag = (tagName: string) => {
         webViewref.current?.injectJavaScript(`window.toggleSelectionTag('${tagName}');`);
-    }
-
-    const setPlaceholder = (placeholder: string) => {
-        webViewref.current?.injectJavaScript(`setPlaceholder('${placeholder}');`);
     }
 
     return (
