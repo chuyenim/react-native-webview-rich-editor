@@ -2,7 +2,7 @@
 "The @chuyenim/react-native-webview-rich-editor" is an open project and I'm no longer **actively maintaining** it."
 
 # @chuyenim/react-native-webview-rich-editor
-react-native-cn-quill is a rich-text editor for react-native. We've created this library on top of Quill Api.
+@chuyenim/react-native-webview-rich-editor is a rich-text editor for react-native. We've created this library on top of Webview Api.
 
 <img src="https://img001.prntscr.com/file/img001/Q4283IjQTmaNMC1TfEnPsQ.png" width="50%">
 
