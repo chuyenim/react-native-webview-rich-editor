@@ -20,7 +20,7 @@ npm i @chuyenim/react-native-webview-rich-editor
 
 #### Install using yarn:
 
-```
+```sh
 yarn add @chuyenim/react-native-webview-rich-editor
 ```
 
@@ -93,13 +93,13 @@ RichEditor is the main component of this library. You may easily add it to your 
 
 ## RichEditor Props
 
-### `content`
+### `value`
 
 Content of the rich editor.
 
 | Type         | Required |
 | ------------ | -------- |
-| `content` | Yes       |
+| `html` | Yes       |
 
 ---
 
