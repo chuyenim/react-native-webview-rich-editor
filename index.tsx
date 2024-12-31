@@ -185,6 +185,7 @@ export interface RichEditorRef {
     surroundSelection: (before: string, after: string) => void;
     surroundSelectionTag: (tagName: string) => void;
     toggleSelectionTag: (tagName: string) => void;
+    setPlaceholder: (placeholder: string) => void;
 }
   
 interface RichEditorProps {
@@ -201,6 +202,7 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
     const approxiate = 2;
     let timeout: NodeJS.Timeout | undefined;
 
+  const [loadingEnd, setLoadingEnd] = useState(false);
   const [webviewHeight, setWebviewHeight] = useState(initialHeight);
   const [htmlContent, setHtmlContent] = useState(htmlContentTempl.replace('{{content}}', props.value || ''));
   const [content, setContent] = useState(props.value || '');
@@ -214,6 +216,7 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
         surroundSelection: (before, after) => surroundSelection(before, after),
         surroundSelectionTag: (tagName) => surroundSelectionTag(tagName),
         toggleSelectionTag: (tagName) => toggleSelectionTag(tagName),
+        setPlaceholder: (placeholder) => setPlaceholder(placeholder),
     }));
 
     const handleMessage = useCallback(event => {
@@ -252,10 +255,10 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
     }, [webviewHeight]);
 
     useEffect(() => {
-        if (props.placeholder) {
-            webViewref.current?.injectJavaScript(`setPlaceholder('${props.placeholder}')`);
+        if (props.placeholder && loadingEnd) {
+            setPlaceholder(props.placeholder);
         }
-    }, [props.placeholder]);
+    }, [props.placeholder, loadingEnd]);
 
     useEffect(() => {
         if (props.onChange && content !== props.value) {
@@ -291,6 +294,10 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
         webViewref.current?.injectJavaScript(`window.toggleSelectionTag('${tagName}');`);
     }
 
+    const setPlaceholder = (placeholder: string) => {
+        webViewref.current?.injectJavaScript(`setPlaceholder('${placeholder}');`);
+    }
+
     return (
         <View style={{ flex: 1, height: webviewHeight, overflow: 'hidden' }}>
             <WebView
@@ -299,6 +306,7 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
                 source={{ html: htmlContent }}
                 contentMode={'mobile'}
                 onMessage={handleMessage}
+                onLoadEnd={() => setLoadingEnd(true)}
                 style={[ props.bgColor ? { backgroundColor: props.bgColor} : {} , props.customStyles ? props.customStyles : {} ]}
             />
         </View>
