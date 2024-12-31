@@ -26,7 +26,7 @@ yarn add @chuyenim/react-native-webview-rich-editor
 
 ## Usage
 
-Here is a simple overview of our components usage.
+Here is an example of how to use the `RichTextInput` component in your React Native project:
 
 ```js
 import React from "react";
@@ -87,54 +87,27 @@ export default function HomeScreen() {
 }
 ```
 
-# RichEditor
+## Props
 
-RichEditor is the main component of this library. You may easily add it to your application.
+- `value`: The initial content to load into the editor.
+- `onChange`: A callback function that is called when the content of the editor changes.
+- `placeholder`: A placeholder text to display when the editor is empty.
+- `customStyles`: Custom styles to apply to the editor.
+- `bgColor`: Background color of the editor.
+- `injectedCss`: Custom CSS to inject into the editor.
 
-## RichEditor Props
+## Methods
+The `RichEditor` component exposes the following methods via the ref:
 
-### `value`
-
-Content of the rich editor.
-
-| Type         | Required |
-| ------------ | -------- |
-| `html` | Yes       |
-
----
-
-### `onChange`
-
-The function to get changed content in editor.
-| Type | Required |
-| ----------- | ----------- |
-| `function` | No |
-
----
-
-#### `placeholder`
-
-Placeholder text to show when editor is empty.
-| Type | Required |
-| ----------- | ----------- |
-| `string` | No |
-
----
-### `customStyles`
-
-List of custom css to be added to Rich Editor box.
-| Type | Required |
-| ----------- | ----------- |
-| `object[]` | No |
-
----
-
-### `bgColor`
-
-The background color of the rich editor. Warning: This style can be overided by `customStyles` option.
-| Type | Required |
-| ----------- | ----------- |
-| `string` | No |
+- `focus()`: Focuses the editor.
+- `blur()`: Blurs the editor.
+- `setValue(html: string | null)`: Sets the HTML content of the editor.
+- `insertHtml(html: string)`: Inserts the specified HTML at the current cursor position or at the end if no selection is made.
+- `surroundSelection(before: string, after: string)`: Surrounds the current selection with the specified text.
+- `surroundSelectionTag(tagName: string)`: Surrounds the current selection with the specified HTML tag.
+- `toggleSelectionTag(tagName: string)`: Toggles the specified HTML tag around the current selection.
+- `setPlaceholder(placeholder: string)`: Sets the placeholder text for the editor.
+- `injectCss(css: string)`: Injects custom CSS into the editor.
 
 # Contributing
 
