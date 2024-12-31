@@ -244,7 +244,9 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
     }, [props.placeholder]);
 
     useEffect(() => {
-        props.onChange(content)
+        if (props.onChange) {
+            props.onChange(content)
+        }
     }, [content]);
 
     const focusEditor = () => {
