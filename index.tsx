@@ -49,6 +49,10 @@ function blurtEditor() {
     editor.blur();
 }
 
+function setHtml(html) {
+    editor.innerHTML = html;
+}
+
 function insertHtml(html) {
     // Get the current selection
     const selection = window.getSelection();
@@ -176,6 +180,7 @@ editor.addEventListener('input', function(event) {
 export interface RichEditorRef {
     focus: () => void;
     blur: () => void;
+    setValue: (html: string | null) => void;
     insertHtml: (html: string) => void;
     surroundSelection: (before: string, after: string) => void;
     surroundSelectionTag: (tagName: string) => void;
@@ -191,7 +196,6 @@ interface RichEditorProps {
 }
 
 const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
-
     // const isAndroid = Platform.OS === 'android';
     const initialHeight = 20;
     const approxiate = 2;
@@ -205,6 +209,7 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
     useImperativeHandle(ref, () => ({
         focus: () => focusEditor(),
         blur: () => blurEditor(),
+        setValue: (html) => setValue(html),
         insertHtml: (html) => insertHtml(html),
         surroundSelection: (before, after) => surroundSelection(before, after),
         surroundSelectionTag: (tagName) => surroundSelectionTag(tagName),
@@ -253,33 +258,37 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
     }, [props.placeholder]);
 
     useEffect(() => {
-        if (props.onChange) {
+        if (props.onChange && content !== props.value) {
             props.onChange(content)
         }
     }, [content]);
 
     const focusEditor = () => {
-        webViewref.current?.injectJavaScript('focustEditor()');
+        webViewref.current?.injectJavaScript('focustEditor();');
     }
 
     const blurEditor = () => {
-        webViewref.current?.injectJavaScript('blurtEditor()');
+        webViewref.current?.injectJavaScript('blurtEditor();');
+    }
+
+    const setValue = (html: string | null) => {
+        webViewref.current?.injectJavaScript(`window.setHtml(${JSON.stringify(html)});`);
     }
 
     const insertHtml = (html: string) => {
-        webViewref.current?.injectJavaScript(`window.insertHtml('${html}')`);
+        webViewref.current?.injectJavaScript(`window.insertHtml(${JSON.stringify(html)});`);
     }
 
     const surroundSelection = (before: string, after: string) => {
-        webViewref.current?.injectJavaScript(`window.surroundSelection('${before}', '${after}')`);
+        webViewref.current?.injectJavaScript(`window.surroundSelection('${before}', '${after}');`);
     }
 
     const surroundSelectionTag = (tagName: string) => {
-        webViewref.current?.injectJavaScript(`window.surroundSelectionTag('${tagName}')`);
+        webViewref.current?.injectJavaScript(`window.surroundSelectionTag('${tagName}');`);
     }
 
     const toggleSelectionTag = (tagName: string) => {
-        webViewref.current?.injectJavaScript(`window.toggleSelectionTag('${tagName}')`);
+        webViewref.current?.injectJavaScript(`window.toggleSelectionTag('${tagName}');`);
     }
 
     return (
