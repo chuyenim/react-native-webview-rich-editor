@@ -58,11 +58,20 @@ function insertHtml(html) {
         return;
     }
 
+    // Get the range of the current selection
+    const range = selection.getRangeAt(0);
+
     // Get the HTML to insert
     // const htmlToInsert = '<div>Hello, world!</div>';
 
     // Insert the HTML at the current position
-    document.execCommand('insertHTML', false, html);
+    // document.execCommand('insertHTML', false, html);
+
+    // Insert the new element at the current position
+    const newParent = document.createElement('span');
+    newParent.innerHTML = html;
+    range.insertNode(...newParent.childNodes);
+    range.collapse(); // removes selected and places caret at the end of the injected node
 }
 
 function surroundSelection(textBefore, textAfter) {
