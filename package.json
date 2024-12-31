@@ -1,0 +1,19 @@
+{
+  "name": "react-native-webview-rich-editor",
+  "version": "0.1.0",
+  "description": "A rich editor uses Webview, no additional libraries, no other dependencies.",
+  "main": "index.tsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "rich",
+    "editor",
+    "rich",
+    "text",
+    "text",
+    "input"
+  ],
+  "author": "ChuyenIM",
+  "license": "MIT"
+}
