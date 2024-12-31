@@ -1,6 +1,6 @@
 {
   "name": "@chuyenim/react-native-webview-rich-editor",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "A rich editor uses Webview, no additional libraries, no other dependencies.",
   "main": "index.tsx",
   "scripts": {
@@ -19,6 +19,9 @@
   "author": "ChuyenIM",
   "dependencies": {
     "react-native-webview": "*"
+  },
+  "devDependencies": {
+    "typescript": "*"
   },
   "license": "MIT"
 }

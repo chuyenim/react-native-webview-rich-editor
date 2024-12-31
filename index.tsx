@@ -174,8 +174,8 @@ export interface RichEditorRef {
 }
   
 interface RichEditorProps {
-  content: string;
-  onChange?: (content: string) => void;
+  value: string;
+  onChange?: (value: string) => void;
   placeholder?: string | undefined;
   customStyles?: any;
   bgColor?: any;
@@ -189,8 +189,8 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
     let timeout: NodeJS.Timeout | undefined;
 
   const [webviewHeight, setWebviewHeight] = useState(initialHeight);
-  const [htmlContent, setHtmlContent] = useState(htmlContentTempl.replace('{{content}}', props.content || ''));
-  const [content, setContent] = useState(props.content || '');
+  const [htmlContent, setHtmlContent] = useState(htmlContentTempl.replace('{{content}}', props.value || ''));
+  const [content, setContent] = useState(props.value || '');
   const webViewref = React.useRef<WebView>(null);
   
     useImperativeHandle(ref, () => ({
