@@ -13,11 +13,12 @@
   "keywords": [
     "rich",
     "editor",
-    "rich",
-    "text",
     "text",
     "input"
   ],
   "author": "ChuyenIM",
+  "dependencies": {
+    "react-native-webview": "*"
+  },
   "license": "MIT"
 }

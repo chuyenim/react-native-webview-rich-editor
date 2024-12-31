@@ -175,7 +175,7 @@ export interface RichEditorRef {
   
 interface RichEditorProps {
   content: string;
-  onChange: (content: string) => void;
+  onChange?: (content: string) => void;
   placeholder?: string | undefined;
   viewStyles?: any;
   bgColor?: any;
