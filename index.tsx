@@ -177,7 +177,7 @@ interface RichEditorProps {
   content: string;
   onChange?: (content: string) => void;
   placeholder?: string | undefined;
-  viewStyles?: any;
+  customStyles?: any;
   bgColor?: any;
 }
 
@@ -279,7 +279,7 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
                 source={{ html: htmlContent }}
                 contentMode={'mobile'}
                 onMessage={handleMessage}
-                style={[ props.bgColor ? { backgroundColor: props.bgColor} : {} , props.viewStyles ? props.viewStyles : {} ]}
+                style={[ props.bgColor ? { backgroundColor: props.bgColor} : {} , props.customStyles ? props.customStyles : {} ]}
             />
         </View>
     );
