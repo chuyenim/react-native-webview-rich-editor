@@ -14,7 +14,7 @@ const htmlContentTempl = `<head>
         cursor: text;
         padding: 2px;
         outline: none;
-        min-height: 20px;
+        min-height: {{initialHeight}}px;
         box-sizing: border-box;
     }
     p {
@@ -204,17 +204,19 @@ interface RichEditorProps {
   customStyles?: any;
   bgColor?: string;
   injectedCss?: string;
+  maxHeight?: number;
+  initialHeight?: number;
 }
 
 const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
     // const isAndroid = Platform.OS === 'android';
-    const initialHeight = 20;
+    const initialHeight = props.initialHeight || 20;
     const approxiate = 2;
     let timeout: NodeJS.Timeout | undefined;
 
   const [loadingEnd, setLoadingEnd] = useState(false);
   const [webviewHeight, setWebviewHeight] = useState(initialHeight);
-  const [htmlContent, setHtmlContent] = useState(htmlContentTempl.replace('{{content}}', props.value || ''));
+  const [htmlContent, setHtmlContent] = useState(htmlContentTempl.replace('{{content}}', props.value || '').replace('{{initialHeight}}', initialHeight.toString()));
   const [content, setContent] = useState(props.value || '');
   const webViewref = React.useRef<WebView>(null);
   
@@ -238,6 +240,7 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
         // }
 
         const data = JSON.parse(event.nativeEvent.data);
+        // console.log("data:", data, webviewHeight);
 
         if (!data) {
             return;
@@ -249,10 +252,18 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
                     data.documentHeight < webviewHeight + approxiate 
                     || data.documentHeight > webviewHeight + approxiate
                 )) {
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => {
-                    setWebviewHeight(data.documentHeight);
-                    }, 50);
+                    if (props.maxHeight !== undefined && data.documentHeight > props.maxHeight) {
+                        // clearTimeout(timeout);
+                        // timeout = setTimeout(() => {
+                            setWebviewHeight(props.maxHeight || 100);
+                        // }, 50);
+                        return;
+                    }
+
+                    // clearTimeout(timeout);
+                    // timeout = setTimeout(() => {
+                        setWebviewHeight(data.documentHeight);
+                    // }, 50);
                 }
                 break;
             }
@@ -320,7 +331,7 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
     }
 
     return (
-        <View style={{ flex: 1, height: webviewHeight, overflow: 'hidden' }}>
+        <View style={{ height: webviewHeight, overflow: 'hidden' }}>
             <WebView
                 ref={webViewref}
                 originWhitelist={['*']}
