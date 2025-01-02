@@ -43,11 +43,11 @@ const htmlContentTempl = `<head>
 <script type="text/javascript">
 const editor = document.getElementById('editor');
 
-function focustEditor() {
+function focusEditor() {
     editor.focus();
 }
 
-function blurtEditor() {
+function blurEditor() {
     editor.blur();
 }
 
@@ -303,11 +303,11 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
     }
 
     const focusEditor = () => {
-        webViewref.current?.injectJavaScript('window.focustEditor();');
+        webViewref.current?.injectJavaScript('window.focusEditor();');
     }
 
     const blurEditor = () => {
-        webViewref.current?.injectJavaScript('bwindow.lurtEditor();');
+        webViewref.current?.injectJavaScript('window.blurEditor();');
     }
 
     const setValue = (html: string | null) => {
@@ -339,6 +339,7 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
                 contentMode={'mobile'}
                 onMessage={handleMessage}
                 onLoadEnd={() => setLoadingEnd(true)}
+                keyboardDisplayRequiresUserAction={false}
                 style={[ props.bgColor ? { backgroundColor: props.bgColor} : {} , props.customStyles ? props.customStyles : {} ]}
             />
         </View>
