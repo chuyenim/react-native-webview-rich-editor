@@ -206,6 +206,7 @@ interface RichEditorProps {
   injectedCss?: string;
   maxHeight?: number;
   initialHeight?: number;
+  onLoadEnd?: any;
 }
 
 const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
@@ -276,6 +277,13 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
         }
     }, [webviewHeight]);
 
+    const handleLoadEnd = () => {
+        setLoadingEnd(true)
+        if (props.onLoadEnd && typeof props.onLoadEnd == 'function') {
+            props.onLoadEnd()
+        }
+    }
+
     useEffect(() => {
         if (props.placeholder && loadingEnd) {
             setPlaceholder(props.placeholder);
@@ -338,7 +346,7 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
                 source={{ html: htmlContent }}
                 contentMode={'mobile'}
                 onMessage={handleMessage}
-                onLoadEnd={() => setLoadingEnd(true)}
+                onLoadEnd={handleLoadEnd}
                 keyboardDisplayRequiresUserAction={false}
                 style={[ props.bgColor ? { backgroundColor: props.bgColor} : {} , props.customStyles ? props.customStyles : {} ]}
             />
