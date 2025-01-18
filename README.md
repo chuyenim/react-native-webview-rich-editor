@@ -1,3 +1,5 @@
+[![npm downloads](https://img.shields.io/npm/dm/@chuyenim/react-native-webview-rich-editor.svg)](https://www.npmjs.com/package/@chuyenim/react-native-webview-rich-editor) [![version](https://img.shields.io/npm/v/@chuyenim/react-native-webview-rich-editor.svg)](https://www.npmjs.com/package/@chuyenim/react-native-webview-rich-editor) ![npm bundle size (minified + gzip)](https://img.shields.io/bundlephobia/minzip/@chuyenim/react-native-webview-rich-editor.svg) ![npm type definitions](https://img.shields.io/npm/types/@chuyenim/react-native-webview-rich-editor.svg)
+
 ## Important announcement
 "The @chuyenim/react-native-webview-rich-editor" is an open project and I'm no longer **actively maintaining** it."
 
