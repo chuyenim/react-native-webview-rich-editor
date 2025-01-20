@@ -2,7 +2,9 @@ import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useStat
 import { Platform, View } from "react-native";
 import { WebView } from 'react-native-webview';
 
-const htmlContentTempl = `<head>
+const htmlContentTempl = `<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
     body {
@@ -172,9 +174,19 @@ const resizeObserver = new ResizeObserver(entries => {
 // start observing a DOM node
 resizeObserver.observe(editor);
 
-editor.addEventListener('input', function(event) {
-    // console.log('Hey, somebody changed something in my text!');
+function setChangeListener (div, listener) {
+    div.addEventListener("input", listener);
+    div.addEventListener("blur", listener);
+    // div.addEventListener("keyup", listener);
+    div.addEventListener("paste", listener);
+    div.addEventListener("copy", listener);
+    div.addEventListener("cut", listener);
+    div.addEventListener("delete", listener);
+    // div.addEventListener("selectionchange", listener);
+    // div.addEventListener("mouseup", listener);
+}
 
+setChangeListener(editor, function(event){
     window.ReactNativeWebView.postMessage(
         JSON.stringify({
           event: 'contentChange',
@@ -182,7 +194,19 @@ editor.addEventListener('input', function(event) {
         }),
     );
 });
-</script>`
+
+// editor.addEventListener('input', function(event) {
+//     // console.log('Hey, somebody changed something in my text!');
+
+//     window.ReactNativeWebView.postMessage(
+//         JSON.stringify({
+//           event: 'contentChange',
+//           contentChange: event.target.innerHTML,
+//         }),
+//     );
+// });
+</script>
+</html>`;
 
 // Define the RichEditorRef type
 export interface RichEditorRef {
@@ -261,10 +285,7 @@ const RichEditor = forwardRef<RichEditorRef, RichEditorProps>((props, ref) => {
                         return;
                     }
 
-                    // clearTimeout(timeout);
-                    // timeout = setTimeout(() => {
-                        setWebviewHeight(data.documentHeight);
-                    // }, 50);
+                    setWebviewHeight(data.documentHeight);
                 }
                 break;
             }
